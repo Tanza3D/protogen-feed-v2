@@ -8,8 +8,8 @@ export const createDb = () => {
 
   const connection = mysql.createPool({
     host: "localhost",
-    user: "root",
-    password: "password",
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
     database: "protogenfeed",
     connectionLimit: 10,
   });
