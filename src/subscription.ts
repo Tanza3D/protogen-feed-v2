@@ -72,7 +72,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
         if (create.record?.reply) {
           var parentReplier = create.record?.reply.parent.uri.split("//")[1].split("/")[0];
-          var [parentuser] = await this.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
+          var [parentuser] = await this.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
 
           // @ts-ignore
           if(parentuser.length > 0) {
