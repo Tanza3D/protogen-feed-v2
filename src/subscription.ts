@@ -17,7 +17,9 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     const postsToDelete = ops.posts.deletes.map((del) => del.uri)
     const postsToCreateWithFilter = await Promise.all(
       ops.posts.creates.map(async (create) => {
-
+        if(create.author.includes("7jhguqneakum7yhv4wt3kwfi")) {
+          console.log("{{{{{{{{{{{ Procesisng one from tanza")
+        }
         var endTime = new Date()
         var startTime = new Date(create.record.createdAt)
         var difference = endTime.getTime() - startTime.getTime() // This will give difference in milliseconds
