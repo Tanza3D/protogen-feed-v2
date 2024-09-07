@@ -48,8 +48,8 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
             }
           }
         } else {
+          console.log(user[0]['did'] + " is already processed! " , user[0])
           if (user[0]['protogen'] == 1) {
-            console.log(user[0]['did'] + " is already a protogen!")
             add = true
             reprocess_user = false;
           }
