@@ -48,7 +48,6 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
             if(create.author.includes("3uyxuzj")) console.log('!!!!!!!!! ' + create.author + ' is nota furry')
           }
         } else {
-          console.log(user[0]['did'] + ' is already processed! ', user[0])
           if (user[0]['protogen'] == 1) {
             add = true
             reprocess_user = false
