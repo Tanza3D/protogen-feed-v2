@@ -17,8 +17,8 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     const postsToDelete = ops.posts.deletes.map((del) => del.uri)
     const postsToCreateWithFilter = await Promise.all(
       ops.posts.creates.map(async (create) => {
-        if(create.author.includes("7jhguqneakum7yhv4wt3kwfi")) {
-          console.log("{{{{{{{{{{{ Procesisng one from tanza")
+        if (create.author.includes('7jhguqneakum7yhv4wt3kwfi')) {
+          console.log('{{{{{{{{{{{ Procesisng one from tanza')
         }
         const endTime = new Date()
         const startTime = new Date(create.record.createdAt)
@@ -38,20 +38,18 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         if (user.length < 1) {
           const isfurry = FurryHelper.isFurry(create.record.text)
           let extra = false
-          if(FurryHelper.isProtogen(create.record.text)) extra = true;
+          if (FurryHelper.isProtogen(create.record.text)) extra = true
           if (isfurry.length > 0 || extra) {
             reprocess_user = true
             console.log('new furry ' + create.author + ' on matching ' + isfurry.join(', '))
           } else {
-            if(create.author.includes("7jhguqneakum7yhv4wt3kwfi")) {
-              console.log("!!!!!!!!! tanza is nota furry");
-            }
+            console.log('!!!!!!!!! ' + create.author + ' is nota furry')
           }
         } else {
-          console.log(user[0]['did'] + " is already processed! " , user[0])
+          console.log(user[0]['did'] + ' is already processed! ', user[0])
           if (user[0]['protogen'] == 1) {
             add = true
-            reprocess_user = false;
+            reprocess_user = false
           }
         }
 
@@ -59,7 +57,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           const isfurryx: boolean = (FurryHelper.isFurry(create.record.text).length > 0)
           const profile = await this.agent.api.app.bsky.actor.getProfile({ actor: create.author })
 
-          console.log("reprocessing " + profile.data.handle)
+          console.log('reprocessing ' + profile.data.handle)
           let protogen = false
           if (FurryHelper.isProtogen(profile.data.displayName)) protogen = true
           if (FurryHelper.isProtogenStrict(profile.data.description)) protogen = true
@@ -68,7 +66,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
           if (protogen) add = true
 
-          if (protogen) console.log('that\'s a new protogen :D - ' + profile.data.handle);
+          if (protogen) console.log('that\'s a new protogen :D - ' + profile.data.handle)
 
           const data = {
             'user': create.author,
@@ -89,10 +87,10 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
           // @ts-ignore
           if (parentuser.length > 0) {
-            console.log("discarding post due to reply");
+            console.log('discarding post due to reply')
             if (parentuser[0].protogen == 0) add = false
           } else {
-            console.log("discarding post due to reply");
+            console.log('discarding post due to reply')
             add = false
           }
         }
