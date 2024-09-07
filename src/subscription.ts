@@ -40,6 +40,10 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           if (isfurry.length > 0 || extra) {
             reprocess_user = true
             console.log('new furry ' + create.author + ' on matching ' + isfurry.join(', '))
+          } else {
+            if(create.author.includes("7jhguqneakum7yhv4wt3kwfi")) {
+              console.log("!!!!!!!!! tanza is nota furry");
+            }
           }
         } else {
           if (user[0]['protogen'] == 1) {
