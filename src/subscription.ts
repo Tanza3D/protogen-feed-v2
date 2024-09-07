@@ -75,7 +75,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         var textprotogen = FurryHelper.isProtogen(create.record.text)
         if (textprotogen) add = true
 
-        if (create.record?.reply) {
+        if (create.record?.reply && add) {
           var parentReplier = create.record?.reply.parent.uri.split('//')[1].split('/')[0]
           var [parentuser] = await this.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
 
