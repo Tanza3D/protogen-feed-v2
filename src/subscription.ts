@@ -34,6 +34,8 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         let reprocess_user = false
 
         let [user] = await this.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
+
+        console.log(FurryHelper.isFurry(create.record.text));
         // @ts-ignore
         if (user.length < 1) {
           const isfurry = FurryHelper.isFurry(create.record.text)
@@ -43,7 +45,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
             reprocess_user = true
             console.log('new furry ' + create.author + ' on matching ' + isfurry.join(', '))
           } else {
-            console.log('!!!!!!!!! ' + create.author + ' is nota furry')
+            if(create.author.includes("3uyxuzj")) console.log('!!!!!!!!! ' + create.author + ' is nota furry')
           }
         } else {
           console.log(user[0]['did'] + ' is already processed! ', user[0])
