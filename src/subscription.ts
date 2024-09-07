@@ -35,7 +35,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
         let [user] = await this.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
 
-        console.log(FurryHelper.isFurry(create.record.text));
+        if(FurryHelper.isFurry(create.record.text).length > 0) console.log(FurryHelper.isFurry(create.record.text));
         // @ts-ignore
         if (user.length < 1) {
           const isfurry = FurryHelper.isFurry(create.record.text)
