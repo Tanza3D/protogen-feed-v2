@@ -20,24 +20,24 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         if(create.author.includes("7jhguqneakum7yhv4wt3kwfi")) {
           console.log("{{{{{{{{{{{ Procesisng one from tanza")
         }
-        var endTime = new Date()
-        var startTime = new Date(create.record.createdAt)
-        var difference = endTime.getTime() - startTime.getTime() // This will give difference in milliseconds
-        var resultInMinutes = Math.round(difference / 60000)
-        var resultInSeconds = Math.round(difference / 1000) // Convert to seconds
+        const endTime = new Date()
+        const startTime = new Date(create.record.createdAt)
+        const difference = endTime.getTime() - startTime.getTime() // This will give difference in milliseconds
+        const resultInMinutes = Math.round(difference / 60000)
+        const resultInSeconds = Math.round(difference / 1000) // Convert to seconds
 
         if (resultInSeconds > 60) {
           console.log('running ' + resultInSeconds + ' seconds behind (' + resultInMinutes + ' mins)')
         }
 
-        var add = false
-        var reprocess_user = false
+        let add = false
+        let reprocess_user = false
 
-        var [user] = await this.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
+        let [user] = await this.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
         // @ts-ignore
         if (user.length < 1) {
-          var isfurry = FurryHelper.isFurry(create.record.text)
-          var extra = false;
+          const isfurry = FurryHelper.isFurry(create.record.text)
+          let extra = false
           if(FurryHelper.isProtogen(create.record.text)) extra = true;
           if (isfurry.length > 0 || extra) {
             reprocess_user = true
@@ -56,11 +56,11 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         }
 
         if (reprocess_user == true) {
-          var isfurryx: boolean = (FurryHelper.isFurry(create.record.text).length > 0)
+          const isfurryx: boolean = (FurryHelper.isFurry(create.record.text).length > 0)
           const profile = await this.agent.api.app.bsky.actor.getProfile({ actor: create.author })
 
           console.log("reprocessing " + profile.data.handle)
-          var protogen = false
+          let protogen = false
           if (FurryHelper.isProtogen(profile.data.displayName)) protogen = true
           if (FurryHelper.isProtogenStrict(profile.data.description)) protogen = true
           if (FurryHelper.isProtogenTag(profile.data.handle)) protogen = true
@@ -68,9 +68,9 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
           if (protogen) add = true
 
-          if (protogen) console.log('that\'s a new protogen :D')
+          if (protogen) console.log('that\'s a new protogen :D - ' + profile.data.handle);
 
-          var data = {
+          const data = {
             'user': create.author,
             'furry': isfurryx,
             'protogen': protogen,
@@ -80,12 +80,12 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
             'VALUES (?, ?, ?);', [data.user, data.furry ? 1 : 0, data.protogen ? 1 : 0])
         }
 
-        var textprotogen = FurryHelper.isProtogen(create.record.text)
+        const textprotogen = FurryHelper.isProtogen(create.record.text)
         if (textprotogen) add = true
 
         if (create.record?.reply && add) {
-          var parentReplier = create.record?.reply.parent.uri.split('//')[1].split('/')[0]
-          var [parentuser] = await this.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
+          const parentReplier = create.record?.reply.parent.uri.split('//')[1].split('/')[0]
+          let [parentuser] = await this.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
 
           // @ts-ignore
           if (parentuser.length > 0) {
