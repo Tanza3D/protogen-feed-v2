@@ -18,14 +18,14 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     const postsToCreateWithFilter = await Promise.all(
       ops.posts.creates.map(async (create) => {
 
-        var endTime = new Date();
-        var startTime = new Date(create.record.createdAt);
-        var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
-        var resultInMinutes = Math.round(difference / 60000);
-        var resultInSeconds = Math.round(difference / 1000); // Convert to seconds
+        var endTime = new Date()
+        var startTime = new Date(create.record.createdAt)
+        var difference = endTime.getTime() - startTime.getTime() // This will give difference in milliseconds
+        var resultInMinutes = Math.round(difference / 60000)
+        var resultInSeconds = Math.round(difference / 1000) // Convert to seconds
 
         if (resultInSeconds > 60) {
-          console.log("running " + resultInSeconds + " seconds behind (" + resultInMinutes + " mins)")
+          console.log('running ' + resultInSeconds + ' seconds behind (' + resultInMinutes + ' mins)')
         }
 
         var add = false
@@ -35,12 +35,17 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         // @ts-ignore
         if (user.length < 1) {
           var isfurry = FurryHelper.isFurry(create.record.text)
-          if (isfurry.length > 0) {
+          var extra = false;
+          if(FurryHelper.isProtogen(create.record.text)) extra = true;
+          if (isfurry.length > 0 || extra) {
             reprocess_user = true
             console.log('new furry ' + create.author + ' on matching ' + isfurry.join(', '))
           }
         } else {
-          if (user[0]['protogen'] == 1) add = true
+          if (user[0]['protogen'] == 1) {
+            add = true
+            reprocess_user = false;
+          }
         }
 
         if (reprocess_user == true) {
@@ -68,21 +73,23 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         }
 
         var textprotogen = FurryHelper.isProtogen(create.record.text)
-        if(textprotogen) add = true;
+        if (textprotogen) add = true
 
         if (create.record?.reply) {
-          var parentReplier = create.record?.reply.parent.uri.split("//")[1].split("/")[0];
+          var parentReplier = create.record?.reply.parent.uri.split('//')[1].split('/')[0]
           var [parentuser] = await this.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
 
           // @ts-ignore
-          if(parentuser.length > 0) {
-            if(parentuser[0].protogen == 0) add = false;
+          if (parentuser.length > 0) {
+            console.log("discarding post due to reply");
+            if (parentuser[0].protogen == 0) add = false
           } else {
-            add = false;
+            console.log("discarding post due to reply");
+            add = false
           }
         }
 
-        if(add) console.log("adding ; " + create.record.text);
+        if (add) console.log('adding ; ' + create.record.text)
 
         return {
           shouldCreate: add,
