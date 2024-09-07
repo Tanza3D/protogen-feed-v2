@@ -43,6 +43,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           }
         } else {
           if (user[0]['protogen'] == 1) {
+            console.log(user[0]['did'] + " is already a protogen!")
             add = true
             reprocess_user = false;
           }
@@ -52,6 +53,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           var isfurryx: boolean = (FurryHelper.isFurry(create.record.text).length > 0)
           const profile = await this.agent.api.app.bsky.actor.getProfile({ actor: create.author })
 
+          console.log("reprocessing " + profile.data.handle)
           var protogen = false
           if (FurryHelper.isProtogen(profile.data.displayName)) protogen = true
           if (FurryHelper.isProtogenStrict(profile.data.description)) protogen = true
