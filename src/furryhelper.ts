@@ -1,5 +1,6 @@
 export class FurryHelper {
   static isProtogen(name: string = '') {
+    if(this.isProtogenTag(name)) return true;
     if (name.toLowerCase().endsWith('proot')) {
       return true
     }
@@ -17,6 +18,7 @@ export class FurryHelper {
       || name.toLowerCase().includes('protogens')
       || name.toLowerCase().includes('protogenfeed')
       || name.toLowerCase().includes(' proot')
+      || name.toLowerCase().includes('#protogen')
       || name.toLowerCase().includes(' proots')
       || name.toLowerCase().includes(' proot ')
       || name.toLowerCase().includes(' proots ')
@@ -24,11 +26,13 @@ export class FurryHelper {
   }
 
   static isProtogenStrict(name: string = '') {
+    if(this.isProtogenTag(name)) return true;
     return (name.toLowerCase().includes(' protogen ')
       || name.toLowerCase().includes(' protogens ')
       || name.toLowerCase().includes('protogenfeed')
       || name.toLowerCase().includes('im a protogen')
       || name.toLowerCase().includes('protogen ')
+      || name.toLowerCase().includes('#protogen')
       || name.toLowerCase().includes(' protogen')
       || name.toLowerCase().includes(' proot ')
       || name.toLowerCase().includes(' proots ')
