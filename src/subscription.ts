@@ -125,19 +125,15 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
       // Execute the query with the actual values
       await this.db.execute(deleteQuery, postsToDelete)
     }
+    
 
     if (postsToCreate.length > 0) {
-      const values = postsToCreate.map(post => [post.uri, post.cid, post.indexedAt])
-
+      const values = postsToCreate.map(post => [post.uri, post.cid, post.indexedAt]);
       const insertQuery = `
-          INSERT INTO post (uri, cid, indexedAt)
-          VALUES ?
-          ON DUPLICATE KEY UPDATE cid       = VALUES(cid),
-                                  indexedAt = VALUES(indexedAt)
-      `
-
-      // Use the 'query' method instead of 'execute' to handle array of arrays correctly
-      await this.db.query(insertQuery, [values])
+        INSERT INTO post (uri, cid, indexedAt) VALUES ?
+        ON DUPLICATE KEY UPDATE cid = VALUES(cid), indexedAt = VALUES(indexedAt)
+      `;
+      await this.db.query(insertQuery, [values]);
     }
 
   }

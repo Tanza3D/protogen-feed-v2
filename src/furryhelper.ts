@@ -56,7 +56,7 @@ export class FurryHelper {
       'doggo', 'cutie', 'woof', 'meow', 'roomba', 'toaster', '>w<', '^w^', '^^',
       '^ ^', 'rawr', 'sona', ' vr ', 'protogen', 'beeper', 'fluffy', 'visor',
       'computer', 'unity', 'porn', 'sexy', 'cutes', 'code', 'sfw', 'nsfw',
-      'suit',
+      'suit', '#proto', '#protogen', '#furry', '#furryart',
       'vore', 'inflation', 'yiff', 'cum', 'e6' // ok lets be fair
     ]
 
