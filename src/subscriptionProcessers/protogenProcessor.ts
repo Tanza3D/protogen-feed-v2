@@ -62,7 +62,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
             'protogen': protogen,
           }
 
-          await subscription.db.execute('INSERT INTO `users` (`did`, `furry`, `protogen`)\n' +
+          await subscription.db.execute('REPLACE INTO `users` (`did`, `furry`, `protogen`)\n' +
             'VALUES (?, ?, ?);', [data.user, data.furry ? 1 : 0, data.protogen ? 1 : 0])
         }
 

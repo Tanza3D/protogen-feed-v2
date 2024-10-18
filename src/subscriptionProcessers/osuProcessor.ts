@@ -53,7 +53,7 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
             'always': protogen,
           }
 
-          await subscription.db.execute('INSERT INTO `osu-users` (`did`, `always`)\n' +
+          await subscription.db.execute('REPLACE INTO `osu-users` (`did`, `always`)\n' +
             'VALUES (?, ?);', [data.user, data.always ? 1 : 0])
         }
 

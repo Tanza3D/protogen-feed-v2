@@ -247,7 +247,7 @@ export async function migrate(db) {
 
     for (var string of test) {
         console.log("adding " + string);
-        await db.execute('INSERT INTO `users` (`did`, `furry`, `protogen`)\n' +
+        await db.execute('REPLACE INTO `users` (`did`, `furry`, `protogen`)\n' +
           'VALUES (?, 1, 1);', [string])
 
     }

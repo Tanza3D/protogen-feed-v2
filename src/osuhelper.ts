@@ -55,7 +55,7 @@ export class OsuHelper {
       'quaver', 'world cup', 'tournament', 'beatmap', 'beatmap spotlights',
       'project loved', ' bn ', ' nat', 'featured artist', 'kudosu',
       'score', ' ss ', 's rank', ' pp ', 'combo', 'medal', 'achievement',
-      'osu', 'osugame', 'dean', 'gaming', 'play', 'hard rock', 'hdhr',
+      'osu', 'osugame', 'dean', 'gaming', 'hard rock', 'hdhr',
       'hdhrdt', 'hddt', 'hrdt', ' dt ', 'double time'
     ]
 
