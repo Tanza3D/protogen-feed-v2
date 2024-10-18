@@ -1,45 +1,41 @@
-export class FurryHelper {
-  static isProtogen(name: string = '') {
-    if(this.isProtogenTag(name)) return true;
-    if (name.toLowerCase().endsWith('proot')) {
+export class OsuHelper {
+  static isOsu(name: string = '') {
+    if(this.isOsuHashtag(name)) return true;
+    if (name.toLowerCase().endsWith('osugame')) {
       return true
     }
-    if (name.toLowerCase().split('.').includes('proot')) {
+    if (name.toLowerCase().split('.').includes('osugame')) {
       return true
     }
-    if (name.toLowerCase().split('.').includes('protogen')) {
+    if (name.toLowerCase().split('.').includes('osugame')) {
       return true
     }
-    return (name.toLowerCase().includes(' protogen')
-      || name.toLowerCase().includes('protogen ')
-      || name.toLowerCase().includes(' protogens')
-      || name.toLowerCase().includes('protogens ')
-      || name.toLowerCase().includes('protogen')
-      || name.toLowerCase().includes('protogens')
-      || name.toLowerCase().includes('protogenfeed')
-      || name.toLowerCase().includes(' proot')
-      || name.toLowerCase().includes('#protogen')
-      || name.toLowerCase().includes(' proots')
-      || name.toLowerCase().includes(' proot ')
-      || name.toLowerCase().includes(' proots ')
-      || ((name.toLowerCase().includes('protogen') || name.toLowerCase().includes('proot')) && name.toLowerCase().includes('furry')))
+    return (name.toLowerCase().includes('osugame')
+      || name.toLowerCase().includes('osu!')
+      || name.toLowerCase().includes('osu!game')
+      || name.toLowerCase().includes('osu game'));
   }
 
-  static isProtogenStrict(name: string = '') {
-    if(this.isProtogenTag(name)) return true;
-    return (name.toLowerCase().includes(' protogen ')
-      || name.toLowerCase().includes(' protogens ')
-      || name.toLowerCase().includes('protogenfeed')
-      || name.toLowerCase().includes('im a protogen')
-      || name.toLowerCase().includes('protogen ')
-      || name.toLowerCase().includes('#protogen')
-      || name.toLowerCase().includes(' protogen')
-      || name.toLowerCase().includes(' proot ')
-      || name.toLowerCase().includes(' proots ')
-      || ((name.toLowerCase().includes('protogen') || name.toLowerCase().includes('proot')) && name.toLowerCase().includes('furry')))
+  static isOsuStrict(name: string = '') {
+    if(this.isOsuHashtag(name)) return true;
+    return (name.toLowerCase().includes('osekai.net')
+      || name.toLowerCase().includes('osu.ppy')
+      || name.toLowerCase().includes('osu!')
+      || name.toLowerCase().includes('osu! player')
+      || name.toLowerCase().includes('osu!catch')
+      || name.toLowerCase().includes('osu!mania')
+      || name.toLowerCase().includes('osu!taiko')
+      || name.toLowerCase().includes('osu!standard')
+      || name.toLowerCase().includes('osu! catch')
+      || name.toLowerCase().includes('osu! mania')
+      || name.toLowerCase().includes('osu! taiko')
+      || name.toLowerCase().includes('osu! standard')
+      || name.toLowerCase().includes('osu!std')
+      || name.toLowerCase().includes('osu! std')
+      || name.toLowerCase().includes(' proots '));
   }
 
-  static isProtogenTag(name: string = '') {
+  static isOsuHashtag(name: string = '') {
     return (name.toLowerCase().includes('#protogen')
       || name.toLowerCase().includes('#proot')
       || name.toLowerCase().includes('#protogenfeed')
@@ -47,7 +43,7 @@ export class FurryHelper {
   }
 
 
-  static isFurry(name = '') {
+  static generalCheck(name = '') {
     // List of furry-related terms
     const furryRelated = [
       'furry', 'furryart', 'proto', 'beep', 'fanart', 'ych', 'blahaj', 'furries',
