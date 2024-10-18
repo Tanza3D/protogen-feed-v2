@@ -51,11 +51,11 @@ export class FurryHelper {
     // List of furry-related terms
     const furryRelated = [
       'furry', 'furryart', 'proto', 'beep', 'fanart', 'ych', 'blahaj', 'furries',
-      'fursuit', 'fursuiter', 'gay', 'trans', 'snoot', 'doodle', 'x3', ':3', 'owo',
-      'uwu', 'cute', 'fox', 'wolf', 'adhd', 'anthro', 'boop', 'blender', 'vrchat',
-      'doggo', 'cutie', 'woof', 'meow', 'roomba', 'toaster', '>w<', '^w^', '^^',
+      'fursuit', 'fursuiter', 'gay', 'trans', 'snoot',
+      'adhd', 'anthro', 'boop', 'blender', 'vrchat',
+      'doggo', 'cutie', 'woof', 'meow', 'roomba', 'toaster',
       '^ ^', 'rawr', 'sona', ' vr ', 'protogen', 'beeper', 'fluffy', 'visor',
-      'computer', 'unity', 'porn', 'sexy', 'cutes', 'code', 'sfw', 'nsfw',
+      'computer', 'unity', 'porn', 'sexy', 'cutes',
       'suit', '#proto', '#protogen', '#furry', '#furryart',
       'vore', 'inflation', 'yiff', 'cum', 'e6' // ok lets be fair
     ]

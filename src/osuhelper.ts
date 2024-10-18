@@ -53,10 +53,10 @@ export class OsuHelper {
       'worst hr player', 'whitecat', 'sound chimera', 'godmode', 'ghost rule',
       'mili', 'tuyu ', 'make a move', 'sotarks', 'vinxis', 'peppy', 'nekodex',
       'quaver', 'world cup', 'tournament', 'beatmap', 'beatmap spotlights',
-      'project loved', 'bn ', 'nat', 'featured artist', 'kudosu',
-      'score', 'ss ', 's rank', 'pp ', 'combo', 'medal', 'achievement',
+      'project loved', ' bn ', ' nat', 'featured artist', 'kudosu',
+      'score', ' ss ', 's rank', ' pp ', 'combo', 'medal', 'achievement',
       'osu', 'osugame', 'dean', 'gaming', 'play', 'hard rock', 'hdhr',
-      'hdhrdt', 'hddt', 'hrdt', 'dt ', 'double time'
+      'hdhrdt', 'hddt', 'hrdt', ' dt ', 'double time'
     ]
 
     const lowercasedName = name.toLowerCase()
