@@ -9,8 +9,7 @@ import { createDb, Database } from './db'
 import { FirehoseSubscription } from './subscription'
 import { AppContext, Config } from './config'
 import wellKnown from './well-known'
-import { AtpAgent } from '@atproto/api'
-import { migrate } from './tmpo'
+import { AppBskyGraphDefs, AtpAgent } from '@atproto/api'
 
 export class FeedGenerator {
   public app: express.Application
@@ -25,7 +24,7 @@ export class FeedGenerator {
     db: Database,
     firehose: FirehoseSubscription,
     cfg: Config,
-    agent: AtpAgent
+    agent: AtpAgent,
   ) {
     this.app = app
     this.db = db
@@ -35,7 +34,7 @@ export class FeedGenerator {
   }
 
   static create(cfg: Config) {
-    console.log(cfg);
+    console.log(cfg)
     const app = express()
     const db = createDb()
     //migrate(db).then(r => () => {});
@@ -66,6 +65,31 @@ export class FeedGenerator {
 
     const agent = new AtpAgent({ service: cfg.bskyServiceUrl })
     const firehose = new FirehoseSubscription(db, cfg.subscriptionEndpoint, agent)
+
+    var tmp = async () => {
+      await agent.login({
+        identifier: cfg.publisherDid,
+        password: cfg.appPassword
+      })
+
+      let cursor: string | undefined
+      let members: AppBskyGraphDefs.ListItemView[] = []
+      do {
+        let res = await agent.api.app.bsky.graph.getList({
+          list: 'at://did:plc:3hlndsgqicwh4sz5vwcg4njh/app.bsky.graph.list/3l6q3bwxe3u25',
+          limit: 100,
+          cursor
+        })
+        cursor = res.data.cursor
+        members = members.concat(res.data.items)
+      } while (cursor)
+
+      for(var member of members) {
+        db.execute("REPLACE INTO `osu-users` (did, always) VALUES (?, 1)", [member.subject.did]);
+      }
+    }
+    tmp()
+
     return new FeedGenerator(app, db, firehose, cfg, agent)
   }
 

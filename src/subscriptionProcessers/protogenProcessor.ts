@@ -1,5 +1,6 @@
 import { FurryHelper } from '../furryhelper'
 import { FirehoseSubscription } from '../subscription'
+import colours from '../colours'
 
 export async function ProtogenProcessor(ops, subscription : FirehoseSubscription, logger : Function) {
   const postsToDelete = ops.posts.deletes.map((del) => del.uri)
@@ -21,7 +22,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
 
         let [user] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
 
-        if (FurryHelper.isFurry(create.record.text).length > 0) logger(FurryHelper.isFurry(create.record.text))
+        //if (FurryHelper.isFurry(create.record.text).length > 0) logger(FurryHelper.isFurry(create.record.text))
         // @ts-ignore
         if (user.length < 1) {
           const isfurry = FurryHelper.isFurry(create.record.text)
@@ -29,7 +30,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
           if (FurryHelper.isProtogen(create.record.text)) extra = true
           if (isfurry.length > 0 || extra) {
             reprocess_user = true
-            logger('new furry ' + create.author + ' on matching ' + isfurry.join(', '))
+            logger(colours.FgLightBlue + 'new furry ' + create.author + ' on matching ' + colours.FgGreen + isfurry.join(', '))
           } else {
             if (create.author.includes('3uyxuzj')) logger('!!!!!!!!! ' + create.author + ' is nota furry')
           }

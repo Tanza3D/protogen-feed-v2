@@ -1,6 +1,6 @@
 export class OsuHelper {
   static isOsu(name: string = '') {
-    if(this.isOsuHashtag(name)) return true;
+    if (this.isOsuHashtag(name)) return true
     if (name.toLowerCase().endsWith('osugame')) {
       return true
     }
@@ -13,11 +13,11 @@ export class OsuHelper {
     return (name.toLowerCase().includes('osugame')
       || name.toLowerCase().includes('osu!')
       || name.toLowerCase().includes('osu!game')
-      || name.toLowerCase().includes('osu game'));
+      || name.toLowerCase().includes('osu game'))
   }
 
   static isOsuStrict(name: string = '') {
-    if(this.isOsuHashtag(name)) return true;
+    if (this.isOsuHashtag(name)) return true
     return (name.toLowerCase().includes('osekai.net')
       || name.toLowerCase().includes('osu.ppy')
       || name.toLowerCase().includes('osu!')
@@ -35,27 +35,28 @@ export class OsuHelper {
       || name.toLowerCase().includes('osu! taiko')
       || name.toLowerCase().includes('osu! standard')
       || name.toLowerCase().includes('osu!std')
-      || name.toLowerCase().includes('osu! std')
-      || name.toLowerCase().includes(' proots '));
+      || name.toLowerCase().includes('osu! std'))
   }
 
   static isOsuHashtag(name: string = '') {
     return (name.toLowerCase().includes('#osu')
-      || name.toLowerCase().includes('#osugame'));
+      || name.toLowerCase().includes('#osugame'))
   }
 
 
   static generalCheck(name = '') {
     // List of furry-related terms
     const furryRelated = [
-      'furry', 'furryart', 'proto', 'beep', 'fanart', 'ych', 'blahaj', 'furries',
-      'fursuit', 'fursuiter', 'gay', 'trans', 'snoot', 'doodle', 'x3', ':3', 'owo',
-      'uwu', 'cute', 'fox', 'wolf', 'adhd', 'anthro', 'boop', 'blender', 'vrchat',
-      'doggo', 'cutie', 'woof', 'meow', 'roomba', 'toaster', '>w<', '^w^', '^^',
-      '^ ^', 'rawr', 'sona', ' vr ', 'protogen', 'beeper', 'fluffy', 'visor',
-      'computer', 'unity', 'porn', 'sexy', 'cutes', 'code', 'sfw', 'nsfw',
-      'suit', '#proto', '#protogen', '#furry', '#furryart',
-      'vore', 'inflation', 'yiff', 'cum', 'e6' // ok lets be fair
+      'cookiezi', 'blue zenith', 'sidetracked day', 'mrekk', 'cloutiful', '727',
+      'wysi', 'when you see it', 'scarlet rose', 'mapping', 'mapper', 'mappers',
+      'honesty', 'gyze', 'will stetson', 'harumachi clover', 'padoru padoru',
+      'worst hr player', 'whitecat', 'sound chimera', 'godmode', 'ghost rule',
+      'mili', 'tuyu ', 'make a move', 'sotarks', 'vinxis', 'peppy', 'nekodex',
+      'quaver', 'world cup', 'tournament', 'beatmap', 'beatmap spotlights',
+      'project loved', 'bn ', 'nat', 'featured artist', 'kudosu',
+      'score', 'ss ', 's rank', 'pp ', 'combo', 'medal', 'achievement',
+      'osu', 'osugame', 'dean', 'gaming', 'play', 'hard rock', 'hdhr',
+      'hdhrdt', 'hddt', 'hrdt', 'dt ', 'double time'
     ]
 
     const lowercasedName = name.toLowerCase()

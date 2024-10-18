@@ -1,27 +1,17 @@
 import { OsuHelper } from '../osuhelper'
 import { FirehoseSubscription } from '../subscription'
-
+import colours from "../colours";
 export async function OsuProcessor(ops, subscription : FirehoseSubscription, logger : Function) {
   const postsToDelete = ops.posts.deletes.map((del) => del.uri)
   const postsToCreateWithFilter = await Promise.all(
     ops.posts.creates.map(async (create) => {
       try {
-        const endTime = new Date()
-        const startTime = new Date(create.record.createdAt)
-        const difference = endTime.getTime() - startTime.getTime() // This will give difference in milliseconds
-        const resultInMinutes = Math.round(difference / 60000)
-        const resultInSeconds = Math.round(difference / 1000) // Convert to seconds
-
-        if (resultInSeconds > 60) {
-          logger('running ' + resultInSeconds + ' seconds behind (' + resultInMinutes + ' mins)')
-        }
-
         let add = false
         let reprocess_user = false
 
-        let [user] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
+        let [user] = await subscription.db.execute('SELECT * FROM `osu-users` WHERE did = ?', [create.author])
 
-        if (OsuHelper.generalCheck(create.record.text).length > 0) logger(OsuHelper.generalCheck(create.record.text))
+        //if (OsuHelper.generalCheck(create.record.text).length > 0) logger(OsuHelper.generalCheck(create.record.text))
         // @ts-ignore
         if (user.length < 1) {
           const isfurry = OsuHelper.generalCheck(create.record.text)
@@ -29,15 +19,18 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
           if (OsuHelper.isOsu(create.record.text)) extra = true
           if (isfurry.length > 0 || extra) {
             reprocess_user = true
-            logger('new furry ' + create.author + ' on matching ' + isfurry.join(', '))
-          } else {
-            if (create.author.includes('3uyxuzj')) logger('!!!!!!!!! ' + create.author + ' is nota furry')
+            logger(colours.FgPink + 'new osu ' + create.author + ' on matching ' + colours.FgGreen + isfurry.join(', '))
           }
         } else {
-          if (user[0]['protogen'] == 1) {
+          if (user[0]['always'] == 1) {
             add = true
             reprocess_user = false
           }
+        }
+
+        if(create.record.text.includes("osu!") && !reprocess_user && !add) {
+          // grrr
+          reprocess_user = true;
         }
 
         if (reprocess_user == true) {
@@ -53,16 +46,15 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
 
           if (protogen) add = true
 
-          if (protogen) logger('that\'s a new protogen :D - ' + profile.data.handle)
+          if (protogen) logger('👀 new osu! player - ' + profile.data.handle)
 
           const data = {
             'user': create.author,
-            'furry': isfurryx,
-            'protogen': protogen,
+            'always': protogen,
           }
 
-          await subscription.db.execute('INSERT INTO `users` (`did`, `furry`, `protogen`)\n' +
-            'VALUES (?, ?, ?);', [data.user, data.furry ? 1 : 0, data.protogen ? 1 : 0])
+          await subscription.db.execute('INSERT INTO `osu-users` (`did`, `always`)\n' +
+            'VALUES (?, ?);', [data.user, data.always ? 1 : 0])
         }
 
         const textprotogen = OsuHelper.isOsu(create.record.text)
@@ -70,14 +62,12 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
 
         if (create.record?.reply && add) {
           const parentReplier = create.record?.reply.parent.uri.split('//')[1].split('/')[0]
-          let [parentuser] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
+          let [parentuser] = await subscription.db.execute('SELECT * FROM `osu-users` WHERE did = ?', [parentReplier])
 
           // @ts-ignore
           if (parentuser.length > 0) {
-            logger('discarding post due to reply')
-            if (parentuser[0].protogen == 0) add = false
+            if (parentuser[0].always == 0) add = false
           } else {
-            logger('discarding post due to reply')
             add = false
           }
         }
@@ -116,7 +106,7 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
 
     // Create the SQL query with placeholders
     const deleteQuery = `DELETE
-                             FROM post
+                             FROM \`osu-post\`
                              WHERE uri IN (${placeholders})`
 
     // Execute the query with the actual values
@@ -127,7 +117,7 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
   if (postsToCreate.length > 0) {
     const values = postsToCreate.map(post => [post.uri, post.cid, post.indexedAt])
     const insertQuery = `
-            INSERT INTO post (uri, cid, indexedAt)
+            INSERT INTO \`osu-post\` (uri, cid, indexedAt)
             VALUES ?
             ON DUPLICATE KEY UPDATE cid       = VALUES(cid),
                                     indexedAt = VALUES(indexedAt)

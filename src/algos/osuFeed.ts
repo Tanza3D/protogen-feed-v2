@@ -2,7 +2,7 @@ import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
 
 // max 15 chars
-export const shortname = 'osufeed-test'
+export const shortname = 'osusky'
 
 export const handler = async (ctx: AppContext, params: QueryParams) => {
   const limit = params.limit;

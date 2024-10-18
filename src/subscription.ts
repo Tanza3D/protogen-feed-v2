@@ -3,6 +3,7 @@ import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
 import { FurryHelper } from './furryhelper'
 import { ProtogenProcessor } from './subscriptionProcessers/protogenProcessor'
 import { OsuProcessor } from './subscriptionProcessers/osuProcessor'
+import colours from './colours'
 var cache = require('memory-cache');
 export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
@@ -17,7 +18,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     try {
       const ops = await getOpsByType(evt)
       ProtogenProcessor(ops, this, (txt) => {
-        console.log("[\x1b[33mProtogenFeed\x1b[0m]", txt);
+        console.log("["+colours.FgLightBlue+"ProtogenFeed\x1b[0m]", txt);
       });
       OsuProcessor(ops, this, (txt) => {
         console.log("    [\x1b[35mosu!Feed\x1b[0m]", txt);
