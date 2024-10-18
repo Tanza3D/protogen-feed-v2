@@ -36,10 +36,8 @@ export class OsuHelper {
   }
 
   static isOsuHashtag(name: string = '') {
-    return (name.toLowerCase().includes('#protogen')
-      || name.toLowerCase().includes('#proot')
-      || name.toLowerCase().includes('#protogenfeed')
-      || name.toLowerCase().includes('#protogenfeedbsky'))
+    return (name.toLowerCase().includes('#osu')
+      || name.toLowerCase().includes('#osugame'));
   }
 
 
