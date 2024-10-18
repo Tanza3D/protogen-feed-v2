@@ -28,8 +28,6 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     }
   }
   async handleEvent(evt: RepoEvent) {
-    if (!isCommit(evt)) return
     this.asyncProcess(evt); // ... look, we don't need to wait.
-
   }
 }
