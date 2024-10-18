@@ -22,7 +22,7 @@ export abstract class FirehoseSubscriptionBase {
     this.sub = new Subscription({
       service: service,
       method: ids.ComAtprotoSyncSubscribeRepos,
-      getParams: () => this.getCursor(),
+      getParams: () => {},
       validate: (value: unknown) => {
         try {
           return lexicons.assertValidXrpcMessage<RepoEvent>(
@@ -42,6 +42,15 @@ export abstract class FirehoseSubscriptionBase {
     try {
       // @ts-ignore
       for await (const evt of this.sub) {
+        //if (!isCommit(evt)) continue
+        //// @ts-ignore
+        //var ops = await getOpsByType(evt)
+//
+        //// @ts-ignore
+        //for(var post of ops.posts.creates) {
+        //  if(post.author.includes("7jhguqneakum7yhv4wt3kwfi")) console.log(post);
+        //}
+
         try {
           this.handleEvent(evt)
         } catch (err) {
@@ -52,29 +61,6 @@ export abstract class FirehoseSubscriptionBase {
       console.error('repo subscription errored', err)
       setTimeout(() => this.run(subscriptionReconnectDelay), subscriptionReconnectDelay)
     }
-  }
-
-  async updateCursor(cursor: number): Promise<void> {
-    const query = `
-      UPDATE sub_state
-      SET \`cursor\` = ?
-      WHERE service = ?
-    `;
-
-    await this.db.execute(query, [cursor, this.service]);
-  }
-  async getCursor(): Promise<{ cursor?: number }> {
-    const query = `
-      SELECT \`cursor\`
-      FROM sub_state
-      WHERE service = ?
-      LIMIT 1
-    `;
-
-    const [rows] = await this.db.execute(query, [this.service]);
-    const result = (rows as mysql.RowDataPacket[])[0];
-
-    return result ? { cursor: result.cursor } : {};
   }
 }
 
