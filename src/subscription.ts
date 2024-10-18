@@ -3,16 +3,16 @@ import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
 import { FurryHelper } from './furryhelper'
 
 export class FirehoseSubscription extends FirehoseSubscriptionBase {
-  async handleEvent(evt: RepoEvent) {
-    if (!isCommit(evt)) return
+  async asyncProcess(evt) {
+
     const ops = await getOpsByType(evt)
 
-    // This logs the text of every post off the firehose.
-    // Just for fun :)
-    // Delete before actually using
-    for (const post of ops.posts.creates) {
-      if (post.record.text.includes('protogen')) console.log(post.record.text)
-    }
+    var events = ops.posts.creates.length;
+    var processed = 0;
+
+    if(events == 0) return;
+
+
 
     const postsToDelete = ops.posts.deletes.map((del) => del.uri)
     const postsToCreateWithFilter = await Promise.all(
@@ -101,6 +101,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
           if (add) console.log('adding ; ' + create.record.text)
 
+          processed++;
           return {
             shouldCreate: add,
             post: {
@@ -151,6 +152,12 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
       `
       await this.db.query(insertQuery, [values])
     }
+
+    //console.log("Processsed " + processed + "/" + events);
+  }
+  async handleEvent(evt: RepoEvent) {
+    if (!isCommit(evt)) return
+    this.asyncProcess(evt); // ... look, we don't need to wait.
 
   }
 }
