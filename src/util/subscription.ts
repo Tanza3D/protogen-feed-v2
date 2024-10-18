@@ -42,14 +42,7 @@ export abstract class FirehoseSubscriptionBase {
     try {
       // @ts-ignore
       for await (const evt of this.sub) {
-        //if (!isCommit(evt)) continue
-        //// @ts-ignore
-        //var ops = await getOpsByType(evt)
-//
-        //// @ts-ignore
-        //for(var post of ops.posts.creates) {
-        //  if(post.author.includes("7jhguqneakum7yhv4wt3kwfi")) console.log(post);
-        //}
+        if (!isCommit(evt)) continue
 
         try {
           await this.handleEvent(evt)
