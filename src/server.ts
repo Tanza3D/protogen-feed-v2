@@ -66,16 +66,25 @@ export class FeedGenerator {
     const agent = new AtpAgent({ service: cfg.bskyServiceUrl })
     const firehose = new FirehoseSubscription(db, cfg.subscriptionEndpoint, agent)
 
-    var tmp = async () => {
-      await agent.login({
-        identifier: cfg.publisherDid,
-        password: cfg.appPassword
-      })
 
+
+    return new FeedGenerator(app, db, firehose, cfg, agent)
+  }
+
+  async start(): Promise<null|http.Server> {
+    await this.agent.login({
+      identifier: this.cfg.handle,
+      password: this.cfg.appPassword,
+    })
+    console.log('logged in')
+
+
+    if(process.env.FEEDTYPE == "subscription") {
+      console.log("running subscription");
       let cursor: string | undefined
       let members: AppBskyGraphDefs.ListItemView[] = []
       do {
-        let res = await agent.api.app.bsky.graph.getList({
+        let res = await this.agent.api.app.bsky.graph.getList({
           list: 'at://did:plc:3hlndsgqicwh4sz5vwcg4njh/app.bsky.graph.list/3l6q3bwxe3u25',
           limit: 100,
           cursor
@@ -85,25 +94,19 @@ export class FeedGenerator {
       } while (cursor)
 
       for(var member of members) {
-        db.execute("REPLACE INTO `osu-users` (did, always) VALUES (?, 1)", [member.subject.did]);
+        this.db.execute("REPLACE INTO `osu-users` (did, always) VALUES (?, 1)", [member.subject.did]);
       }
+
+
+      this.firehose.run(this.cfg.subscriptionReconnectDelay)
+      return null;
+    } else {
+      console.log("running webhost");
+      this.server = this.app.listen(this.cfg.port, this.cfg.listenhost)
+      await events.once(this.server, 'listening')
+      return this.server
     }
-    tmp()
 
-    return new FeedGenerator(app, db, firehose, cfg, agent)
-  }
-
-  async start(): Promise<http.Server> {
-    await this.agent.login({
-      identifier: this.cfg.handle,
-      password: this.cfg.appPassword,
-    })
-    console.log('logged in')
-
-    this.firehose.run(this.cfg.subscriptionReconnectDelay)
-    this.server = this.app.listen(this.cfg.port, this.cfg.listenhost)
-    await events.once(this.server, 'listening')
-    return this.server
   }
 }
 
