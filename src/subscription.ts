@@ -17,10 +17,10 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
   async asyncProcess(evt) {
     try {
       const ops = await getOpsByType(evt)
-      await ProtogenProcessor(ops, this, (txt) => {
+      ProtogenProcessor(ops, this, (txt) => {
         console.log("["+colours.FgLightBlue+"ProtogenFeed\x1b[0m]", txt);
       });
-      await OsuProcessor(ops, this, (txt) => {
+      OsuProcessor(ops, this, (txt) => {
         console.log("    [\x1b[35mosu!Feed\x1b[0m]", txt);
       });
     } catch(e) {
