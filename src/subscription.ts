@@ -17,10 +17,10 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
   async asyncProcess(evt) {
     try {
       const ops = await getOpsByType(evt)
-      ProtogenProcessor(ops, this, (txt) => {
+      await ProtogenProcessor(ops, this, (txt) => {
         console.log("["+colours.FgLightBlue+"ProtogenFeed\x1b[0m]", txt);
       });
-      OsuProcessor(ops, this, (txt) => {
+      await OsuProcessor(ops, this, (txt) => {
         console.log("    [\x1b[35mosu!Feed\x1b[0m]", txt);
       });
     } catch(e) {
@@ -29,7 +29,6 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
   }
   async handleEvent(evt: RepoEvent) {
     if (!isCommit(evt)) return
-    this.asyncProcess(evt); // ... look, we don't need to wait.
-
+    await this.asyncProcess(evt);
   }
 }

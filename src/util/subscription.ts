@@ -52,7 +52,7 @@ export abstract class FirehoseSubscriptionBase {
         //}
 
         try {
-          this.handleEvent(evt)
+          await this.handleEvent(evt)
         } catch (err) {
           console.error('repo subscription could not handle message', err)
         }
