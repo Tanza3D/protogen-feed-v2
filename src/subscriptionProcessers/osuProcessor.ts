@@ -1,13 +1,15 @@
 import { OsuHelper } from '../osuhelper'
 import { FirehoseSubscription } from '../subscription'
-import colours from "../colours";
-export async function OsuProcessor(ops, subscription : FirehoseSubscription, logger : Function) {
+import colours from '../colours'
+
+export async function OsuProcessor(ops, subscription: FirehoseSubscription, logger: Function) {
   const postsToDelete = ops.posts.deletes.map((del) => del.uri)
   const postsToCreateWithFilter = await Promise.all(
     ops.posts.creates.map(async (create) => {
       try {
         let add = false
         let reprocess_user = false
+        let blocked = false
 
         let [user] = await subscription.db.execute('SELECT * FROM `osu-users` WHERE did = ?', [create.author])
 
@@ -26,11 +28,14 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
             add = true
             reprocess_user = false
           }
+          if (user[0]['blocked'] == 1) {
+            blocked = true
+          }
         }
 
-        if(create.record.text.includes("osu!") && !reprocess_user && !add) {
+        if (create.record.text.includes('osu!') && !reprocess_user && !add) {
           // grrr
-          reprocess_user = true;
+          reprocess_user = true
         }
 
         if (reprocess_user == true) {
@@ -72,6 +77,8 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
           }
         }
 
+        if (blocked) add = false
+
         if (add) logger('adding ; ' + create.record.text)
 
         return {
@@ -83,12 +90,12 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
           },
         }
       } catch (e) {
-        logger(e);
+        logger(e)
         return {
           shouldCreate: false,
           post: {
-            uri: "",
-            cid: "",
+            uri: '',
+            cid: '',
             indexedAt: new Date().toISOString(),
           },
         }
@@ -106,8 +113,8 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
 
     // Create the SQL query with placeholders
     const deleteQuery = `DELETE
-                             FROM \`osu-post\`
-                             WHERE uri IN (${placeholders})`
+                         FROM \`osu-post\`
+                         WHERE uri IN (${placeholders})`
 
     // Execute the query with the actual values
     await subscription.db.execute(deleteQuery, postsToDelete)
@@ -117,11 +124,11 @@ export async function OsuProcessor(ops, subscription : FirehoseSubscription, log
   if (postsToCreate.length > 0) {
     const values = postsToCreate.map(post => [post.uri, post.cid, post.indexedAt])
     const insertQuery = `
-            INSERT INTO \`osu-post\` (uri, cid, indexedAt)
-            VALUES ?
-            ON DUPLICATE KEY UPDATE cid       = VALUES(cid),
-                                    indexedAt = VALUES(indexedAt)
-        `
+        INSERT INTO \`osu-post\` (uri, cid, indexedAt)
+        VALUES ?
+        ON DUPLICATE KEY UPDATE cid       = VALUES(cid),
+                                indexedAt = VALUES(indexedAt)
+    `
     await subscription.db.query(insertQuery, [values])
   }
 }

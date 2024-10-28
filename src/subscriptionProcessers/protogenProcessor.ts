@@ -20,6 +20,8 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
         let add = false
         let reprocess_user = false
 
+        let blocked = false;
+
         let [user] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
 
         //if (FurryHelper.isFurry(create.record.text).length > 0) logger(FurryHelper.isFurry(create.record.text))
@@ -38,6 +40,9 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
           if (user[0]['protogen'] == 1) {
             add = true
             reprocess_user = false
+          }
+          if(user[0]['blocked'] == 1) {
+            blocked = true;
           }
         }
 
@@ -82,6 +87,8 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
             add = false
           }
         }
+
+        if(blocked) add = false;
 
         if (add) logger('adding ; ' + create.record.text)
 
