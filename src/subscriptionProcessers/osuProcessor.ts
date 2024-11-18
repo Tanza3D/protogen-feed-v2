@@ -7,6 +7,19 @@ export async function OsuProcessor(ops, subscription: FirehoseSubscription, logg
   const postsToCreateWithFilter = await Promise.all(
     ops.posts.creates.map(async (create) => {
       try {
+        const endTime = new Date()
+        const startTime = new Date(create.record.createdAt)
+        const difference = endTime.getTime() - startTime.getTime() // This will give difference in milliseconds
+        const resultInMinutes = Math.round(difference / 60000)
+        const resultInSeconds = Math.round(difference / 1000) // Convert to seconds
+
+        if(resultInSeconds > 999999) {
+          return; // eh
+        }
+        if (resultInSeconds > 60) {
+          logger('running ' + resultInSeconds + ' seconds behind (' + resultInMinutes + ' mins)')
+        }
+
         let add = false
         let reprocess_user = false
         let blocked = false

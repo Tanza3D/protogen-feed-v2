@@ -13,6 +13,9 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
         const resultInMinutes = Math.round(difference / 60000)
         const resultInSeconds = Math.round(difference / 1000) // Convert to seconds
 
+        if(resultInSeconds > 999999) {
+          return; // eh
+        }
         if (resultInSeconds > 60) {
           logger('running ' + resultInSeconds + ' seconds behind (' + resultInMinutes + ' mins)')
         }
