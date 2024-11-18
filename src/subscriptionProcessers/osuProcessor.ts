@@ -13,16 +13,17 @@ export async function OsuProcessor(ops, subscription: FirehoseSubscription, logg
         const resultInMinutes = Math.round(difference / 60000)
         const resultInSeconds = Math.round(difference / 1000) // Convert to seconds
 
+        let blocked = false;
         if(resultInSeconds > 999999) {
-          return; // eh
+          blocked = true;
         }
-        if (resultInSeconds > 60) {
+        else if (resultInSeconds > 60) {
           logger('running ' + resultInSeconds + ' seconds behind (' + resultInMinutes + ' mins)')
         }
 
+
         let add = false
         let reprocess_user = false
-        let blocked = false
 
         let [user] = await subscription.db.execute('SELECT * FROM `osu-users` WHERE did = ?', [create.author])
 
