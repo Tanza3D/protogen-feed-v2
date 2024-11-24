@@ -79,7 +79,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
 
         if (create.record?.reply && add) {
           const parentReplier = create.record?.reply.parent.uri.split('//')[1].split('/')[0]
-          let [parentuser] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [parentReplier])
+          let [parentuser] = await subscription.db.execute('SELECT * FROM users WHERE did = ? AND blocked = 0', [parentReplier])
 
           // @ts-ignore
           if (parentuser.length > 0) {
