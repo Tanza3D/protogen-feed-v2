@@ -15,6 +15,7 @@ export class FurryHelper {
       || name.toLowerCase().includes(' protogens')
       || name.toLowerCase().includes('protogens ')
       || name.toLowerCase().includes('protogen')
+      || name.toLowerCase().includes('protosona')
       || name.toLowerCase().includes('protogens')
       || name.toLowerCase().includes('protogenfeed')
       || name.toLowerCase().includes(' proot')
@@ -34,6 +35,7 @@ export class FurryHelper {
       || name.toLowerCase().includes('protogen ')
       || name.toLowerCase().includes('#protogen')
       || name.toLowerCase().includes(' protogen')
+      || name.toLowerCase().includes(' protosona')
       || name.toLowerCase().includes(' proot ')
       || name.toLowerCase().includes(' proots ')
       || ((name.toLowerCase().includes('protogen') || name.toLowerCase().includes('proot')) && name.toLowerCase().includes('furry')))
@@ -55,7 +57,7 @@ export class FurryHelper {
       'adhd', 'anthro', 'boop', 'blender', 'vrchat',
       'doggo', 'cutie', 'woof', 'meow', 'roomba', 'toaster',
       '^ ^', 'rawr', 'sona', ' vr ', 'protogen', 'beeper', 'fluffy', 'visor',
-      'computer', 'unity', 'porn', 'sexy', 'cutes',
+      'computer', 'unity', 'porn', 'sexy', 'cutes', 'protosona',
       'suit', '#proto', '#protogen', '#furry', '#furryart',
       'vore', 'inflation', 'yiff', 'cum', 'e6' // ok lets be fair
     ]
