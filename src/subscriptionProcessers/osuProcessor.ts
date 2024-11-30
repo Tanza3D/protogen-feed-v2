@@ -93,7 +93,7 @@ export async function OsuProcessor(ops, subscription: FirehoseSubscription, logg
 
         if (blocked) add = false
 
-        if(create.record.text.includes("ohio")) add = false;
+        if(create.record.text.toLowerCase().includes("ohio")) add = false;
 
         if (add) logger('adding ; ' + create.record.text)
 

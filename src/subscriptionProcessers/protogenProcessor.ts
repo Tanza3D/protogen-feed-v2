@@ -91,6 +91,8 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
           }
         }
 
+        if(create.record.text.toLowerCase().includes("gta6trailer")) add = false;
+
         if(blocked) add = false;
 
         if (add) logger('adding ; ' + create.record.text)
