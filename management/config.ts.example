@@ -1,0 +1,8 @@
+export default {
+    bot: {
+        token: "",
+        server: "639515567233171476"
+    },
+    mysqlUsername: "root",
+    mysqlPassword: "password"
+}

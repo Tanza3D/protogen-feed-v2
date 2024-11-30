@@ -100,7 +100,7 @@ This metadata serves two purposes:
 
 If you are creating a generic feed that does not differ for different users, you do not need to check auth. But if a user's state (such as follows or likes) is taken into account, we _strongly_ encourage you to validate their auth token.
 
-Users are authenticated with a simple JWT signed by the user's repo signing key.
+Feed are authenticated with a simple JWT signed by the user's repo signing key.
 
 This JWT header/payload takes the format:
 ```ts
