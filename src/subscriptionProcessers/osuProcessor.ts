@@ -93,7 +93,7 @@ export async function OsuProcessor(ops, subscription: FirehoseSubscription, logg
 
         if (blocked) add = false
 
-        const forbiddenWords = ["ohio", "michigan", "football", " v osu", " vs osu", "osumich", "buckeyes", "#beatosu", "#jbos"];
+        const forbiddenWords = [" ohio", " michigan", " football", " v osu", " vs osu", " osumich", "buckeyes", "#beatosu", "#jbos"];
         if (forbiddenWords.some(word => create.record.text.toLowerCase().includes(word))) {
           add = false;
         }

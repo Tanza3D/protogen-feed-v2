@@ -48,6 +48,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
             blocked = true;
           }
         }
+        if(create.record.text.toLowerCase().replace("'", "").includes("im a protogen!")) reprocess_user = true;
 
         if (reprocess_user == true) {
           const isfurryx: boolean = (FurryHelper.isFurry(create.record.text).length > 0)
