@@ -16,7 +16,7 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
         if (elapsedSeconds > 999999) return { shouldCreate: false, post: null }
         if (elapsedSeconds > 60) logger(`running ${elapsedSeconds} seconds behind (${Math.round(elapsedSeconds / 60)} mins)`)
 
-        const user = (await subscription.db.execute('SELECT * FROM users WHERE did = ?', [create.author]))[0]
+        const [user] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
         let shouldCreate = false
         let reprocessUser = false
         let isBlocked = false
