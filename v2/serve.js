@@ -2,7 +2,7 @@ import express from 'express'
 import CreateBlueskyRoutes from './utils/bluesky.js'
 
 const app = express()
-const port = 3000
+const port = 3001
 CreateBlueskyRoutes(app);
 
 app.listen(port, () => {
