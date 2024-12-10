@@ -11,15 +11,19 @@ let isProcessing = false; // Flag to ensure we're not processing the queue multi
 
 // Function to process the queue in batches of 50
 
-function log(colour, name, text) {
-  console.log(`${colours.Reset}${colour}[${name}]${colours.Reset} `, text)
-}
+const log = (colour, name, text) => {
+  const maxNameLength = 15; // Adjust this value based on your needs
+  const padding = " ".repeat(maxNameLength - name.length);
+  console.log(`${colours.Reset}${padding}${colour}[${name}]${colours.Reset} `, text);
+};
+
+
 const processQueue = async () => {
   if (isProcessing || queue.length < batchSize) return;
 
   isProcessing = true;
   const batch = queue.splice(0, batchSize); // Get the first 50 items
-  log(colours.BgYellow, "    info", `Processing batch of ${batch.length} items with ` + queue.length + " sitting in queue");
+  log(colours.BgYellow, "info", `Processing batch of ${batch.length} items ` + (queue.length > 50 ? colours.BgRed : colours.BgGreen) + `with ` + queue.length + " sitting in queue" + colours.Reset);
 
   const data = batch.reduce((acc, item) => {
     if (item.kind === 'commit' && item.commit.collection === "app.bsky.feed.post") {
@@ -42,7 +46,7 @@ const processQueue = async () => {
     log(colours.BgBlue, "protogen", text);
   });
   await OsuProcessor(data, (text) => {
-    log(colours.BgMagenta, "     osu", text);
+    log(colours.BgMagenta, "osu", text);
   });
 
   // After processing, reset the flag and continue processing after a short delay
