@@ -1,14 +1,13 @@
-import { FurryHelper } from '../furryhelper'
-import { FirehoseSubscription } from '../subscription'
-import colours from '../colours'
+import database from '../utils/database.js'
+import colours from '../utils/colours.js'
+import FurryHelper from '../utils/feed/FurryHelper.js'
+import { BskyApi } from '../utils/bskyApi.js'
 
-export async function ProtogenProcessor(ops, subscription: FirehoseSubscription, logger: Function) {
-  const postsToDelete = ops.posts.deletes.map((del) => del.uri)
+export default async function ProtogenProcessor(data, logger) {
+  const postsToDelete = data.deletes.map((del) => del.uri)
   const postsToCreateWithFilter = []
-  for (const create of ops.posts.creates) {
+  for (var create of data.creates) {
     try {
-      console.log(create);
-      return;
       var post = create;
       const endTime = new Date()
       const startTime = new Date(create.record.createdAt)
@@ -27,7 +26,8 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
       let reprocess_user = false
 
 
-      let [user] = await subscription.db.execute('SELECT * FROM users WHERE did = ?', [create.author])
+
+      let [user] = await database.execute('SELECT * FROM users WHERE did = ?', [create.author])
 
       //if (FurryHelper.isFurry(create.record.text).length > 0) logger(FurryHelper.isFurry(create.record.text))
       // @ts-ignore
@@ -53,8 +53,8 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
       if (create.record.text.toLowerCase().replace('\'', '').includes('im a protogen!')) reprocess_user = true
 
       if (reprocess_user == true) {
-        const isfurryx: boolean = (FurryHelper.isFurry(create.record.text).length > 0)
-        const profile = await subscription.getUserData(create.author)
+        const isfurryx = (FurryHelper.isFurry(create.record.text).length > 0)
+        const profile = await BskyApi.GetUserData(create.author)
 
         logger('reprocessing ' + profile.data.handle)
         let protogen = false
@@ -73,7 +73,7 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
           'protogen': protogen,
         }
 
-        await subscription.db.execute('REPLACE INTO `users` (`did`, `furry`, `protogen`)\n' +
+        await database.execute('REPLACE INTO `users` (`did`, `furry`, `protogen`)\n' +
           'VALUES (?, ?, ?);', [data.user, data.furry ? 1 : 0, data.protogen ? 1 : 0])
       }
 
@@ -86,7 +86,7 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
 
 
       var isArt = FurryHelper.isArt(create.record.text)
-      if (!(create.record.embed && create.record.embed.$type == 'app.bsky.embed.images')) {
+      if (!(create.record.embed && create.record.embed.$type === 'app.bsky.embed.images')) {
         isArt = false
       }
 
@@ -100,6 +100,10 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
 
       if (add) logger('adding ; ' + create.record.text)
 
+      if(add) {
+
+        console.log(create);
+      }
       postsToCreateWithFilter.push({
         shouldCreate: add,
         post: {
@@ -136,8 +140,8 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
                          FROM post
                          WHERE uri IN (${placeholders})`
 
-    // Execute the query with the actual values
-    await subscription.db.execute(deleteQuery, postsToDelete)
+
+    await database.execute(deleteQuery, postsToDelete)
   }
 
 
@@ -149,6 +153,6 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
         ON DUPLICATE KEY UPDATE cid       = VALUES(cid),
                                 indexedAt = VALUES(indexedAt)
     `
-    await subscription.db.query(insertQuery, [values])
+    await database.query(insertQuery, [values])
   }
 }
