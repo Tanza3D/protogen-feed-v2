@@ -30,6 +30,9 @@ export default function CreateBlueskyRoutes(app) {
       {
         'did': cfg.serviceDid,
         'feeds': [
+          { 'uri': `at://${cfg.ownerDid}/app.bsky.feed.generator/protogen` },
+          { 'uri': `at://${cfg.ownerDid}/app.bsky.feed.generator/protogen-art` },
+          { 'uri': `at://${cfg.ownerDid}/app.bsky.feed.generator/osusky` },
           { 'uri': `at://${cfg.ownerDid}/app.bsky.feed.generator/osufeed-test` },
         ],
       },
