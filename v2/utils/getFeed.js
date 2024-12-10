@@ -34,7 +34,7 @@ export default async (name, cursor, limit = 50) => {
 
   if (cursor) {
     const timeStr = new Date(parseInt(cursor, 10)).toISOString()
-    where.push('post.indexedAt < ?')
+    where.push(`\`${table}\`.indexedAt < ?`)
     queryParams.push(timeStr)
   }
 
