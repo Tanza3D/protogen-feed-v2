@@ -92,6 +92,17 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
           }
         }
 
+
+        var isArt = FurryHelper.isArt(create.record.text);
+        if (!(create.record.embed && create.record.embed.$type == "app.bsky.embed.images")) {
+          //console.log("discarding art because no image");
+          isArt = false;
+        }
+
+        if(isArt && add) {
+          console.log("this is protogen art!", create.record)
+        }
+
         if(create.record.text.toLowerCase().includes("gta6trailer")) add = false;
 
         if(blocked) add = false;
@@ -104,6 +115,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
             uri: create.uri,
             cid: create.cid,
             indexedAt: new Date().toISOString(),
+            art: isArt ? 1 : 0
           },
         }
       } catch (e) {
@@ -114,6 +126,7 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
             uri: "",
             cid: "",
             indexedAt: new Date().toISOString(),
+            art: 0
           },
         }
       }
@@ -139,9 +152,9 @@ export async function ProtogenProcessor(ops, subscription : FirehoseSubscription
 
 
   if (postsToCreate.length > 0) {
-    const values = postsToCreate.map(post => [post.uri, post.cid, post.indexedAt])
+    const values = postsToCreate.map(post => [post.uri, post.cid, post.indexedAt, post.art])
     const insertQuery = `
-            INSERT INTO post (uri, cid, indexedAt)
+            INSERT INTO post (uri, cid, indexedAt, art)
             VALUES ?
             ON DUPLICATE KEY UPDATE cid       = VALUES(cid),
                                     indexedAt = VALUES(indexedAt)

@@ -4,12 +4,14 @@ import {
   OutputSchema as AlgoOutput,
 } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import * as protogenFeed from './protogenFeed'
+import * as protogenFeedArt from './protogenFeedArt'
 import * as osuFeed from './osuFeed'
 
 type AlgoHandler = (ctx: AppContext, params: QueryParams) => Promise<AlgoOutput>
 
 const algos: Record<string, AlgoHandler> = {
   [protogenFeed.shortname]: protogenFeed.handler,
+  [protogenFeedArt.shortname]: protogenFeedArt.handler,
   [osuFeed.shortname]: osuFeed.handler,
 }
 
