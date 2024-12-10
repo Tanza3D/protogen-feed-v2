@@ -2,12 +2,12 @@ import db from './database.js'
 
 
 const feeds = {
-  'protogen': () => ({
+  'protogens': () => ({
     table: 'post',
     where: [],
     params: [],
   }),
-  'protogen-art': () => ({
+  'protogens-art': () => ({
     table: 'post',
     where: ['art = ?'],
     params: [1],
