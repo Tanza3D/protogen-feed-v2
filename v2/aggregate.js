@@ -41,13 +41,16 @@ const processQueue = async () => {
     return acc;
   }, { creates: [], deletes: [] });
 
-
-  await ProtogenProcessor(data, (text) => {
-    log(colours.BgBlue, "protogen", text);
-  });
-  await OsuProcessor(data, (text) => {
-    log(colours.BgMagenta, "osu", text);
-  });
+  try {
+    await ProtogenProcessor(data, (text) => {
+      log(colours.BgBlue, "protogen", text);
+    });
+    await OsuProcessor(data, (text) => {
+      log(colours.BgMagenta, "osu", text);
+    });
+  } catch(e) {
+    console.log(e)
+  }
 
   // After processing, reset the flag and continue processing after a short delay
   isProcessing = false;
@@ -63,7 +66,11 @@ socket.addEventListener('message', (event) => {
   try {
     const data = JSON.parse(event.data);
     queue.push(data);
-    processQueue();
+    try {
+      processQueue();
+    } catch(e) {
+      console.log(e)
+    }
   } catch (error) {
     console.warn('Could not parse message as JSON:', error);
   }
