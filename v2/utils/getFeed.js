@@ -50,7 +50,6 @@ export default async (name, cursor, limit = 50) => {
 
   queryParams.push(limit)
 
-  console.log(query, queryParams)
   const [rows] = await db.execute(query, queryParams)
 
   const feed = (rows).map((row) => ({
@@ -63,7 +62,6 @@ export default async (name, cursor, limit = 50) => {
     newCursor = new Date(last.indexedAt).getTime().toString(10)
   }
 
-  console.log(feed);
   return {
     cursor: newCursor,
     feed,
