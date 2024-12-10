@@ -30,7 +30,9 @@ export async function ProtogenProcessor(ops, subscription: FirehoseSubscription,
             logger(`${colours.FgLightBlue}new furry ${create.author} on matching ${colours.FgGreen}${isFurry ? 'furry' : 'protogen'}`)
           }
         } else {
+          // @ts-ignore
           if (user.protogen === 1) shouldCreate = true
+          // @ts-ignore
           if (user.blocked === 1) isBlocked = true
         }
 
