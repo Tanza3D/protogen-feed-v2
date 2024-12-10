@@ -44,12 +44,7 @@ export abstract class FirehoseSubscriptionBase {
       for await (const evt of this.sub) {
         if (!isCommit(evt)) continue
         // @ts-ignore
-        var ops = await getOpsByType(evt)
-//
-        // @ts-ignore
-        for(var post of ops.posts.creates) {
-          if(post.author.includes("7jhguqneakum7yhv4wt3kwfi")) console.log(post);
-        }
+        var ops = await getOpsByType(evt);
 
         try {
           await this.handleEvent(evt)
@@ -87,24 +82,12 @@ export const getOpsByType = async (evt: Commit): Promise<OperationsByType> => {
       const create = { uri, cid: op.cid.toString(), author: evt.repo }
       if (collection === ids.AppBskyFeedPost && isPost(record)) {
         opsByType.posts.creates.push({ record, ...create })
-      } else if (collection === ids.AppBskyFeedRepost && isRepost(record)) {
-        opsByType.reposts.creates.push({ record, ...create })
-      } else if (collection === ids.AppBskyFeedLike && isLike(record)) {
-        opsByType.likes.creates.push({ record, ...create })
-      } else if (collection === ids.AppBskyGraphFollow && isFollow(record)) {
-        opsByType.follows.creates.push({ record, ...create })
       }
     }
 
     if (op.action === 'delete') {
       if (collection === ids.AppBskyFeedPost) {
         opsByType.posts.deletes.push({ uri })
-      } else if (collection === ids.AppBskyFeedRepost) {
-        opsByType.reposts.deletes.push({ uri })
-      } else if (collection === ids.AppBskyFeedLike) {
-        opsByType.likes.deletes.push({ uri })
-      } else if (collection === ids.AppBskyGraphFollow) {
-        opsByType.follows.deletes.push({ uri })
       }
     }
   }
