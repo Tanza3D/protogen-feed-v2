@@ -1,6 +1,5 @@
 import { isCommit, OutputSchema as RepoEvent } from './lexicon/types/com/atproto/sync/subscribeRepos'
 import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
-import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
 import { ProtogenProcessor } from './subscriptionProcessers/protogenProcessor'
 import { OsuProcessor } from './subscriptionProcessers/osuProcessor'
 import colours from './colours'
