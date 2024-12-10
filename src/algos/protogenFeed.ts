@@ -16,7 +16,7 @@ export const handler = async (ctx: AppContext, params: QueryParams) => {
   }
 
   const query = `
-    SELECT *
+    SELECT uri, indexedAt
     FROM post
     ${whereClause}
     ORDER BY post.indexedAt DESC, post.cid DESC
