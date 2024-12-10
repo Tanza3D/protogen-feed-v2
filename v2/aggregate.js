@@ -29,7 +29,7 @@ const processQueue = async () => {
     if (item.kind === 'commit' && item.commit.collection === "app.bsky.feed.post") {
       var x = item.commit;
       x.author = item.did;
-      x.uri = "at://" + item.did + "/app.bsky.feed.post/" + item.rkey;
+      x.uri = "at://" + item.did + "/app.bsky.feed.post/" + item.commit.rkey;
 
 
 

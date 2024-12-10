@@ -1,6 +1,5 @@
 import GetFeed from './getFeed.js'
-
-const cfg = require('./config')
+import cfg from './config.js'
 
 export default function CreateBlueskyRoutes(app) {
   app.get('/xrpc/app.bsky.feed.getFeedSkeleton', async (req, res) => {

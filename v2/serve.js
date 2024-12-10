@@ -1,5 +1,5 @@
 import express from 'express'
-import CreateBlueskyRoutes from './utils/bluesky'
+import CreateBlueskyRoutes from './utils/bluesky.js'
 
 const app = express()
 const port = 3000
