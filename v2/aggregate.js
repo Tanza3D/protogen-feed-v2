@@ -107,3 +107,5 @@ function attemptReconnect() {
     console.error('Maximum reconnection interval reached. Giving up.');
   }
 }
+
+createWebSocket();
