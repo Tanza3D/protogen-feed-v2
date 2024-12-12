@@ -3,8 +3,6 @@ import ProtogenProcessor from './postProcessor/protogenProcessor.js'
 import colours from './utils/colours.js'
 import OsuProcessor from './postProcessor/osuProcessor.js'
 
-
-const socket = new WebSocket('wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post');
 const batchSize = 100;
 let queue = [];
 let isProcessing = false; // Flag to ensure we're not processing the queue multiple times simultaneously
@@ -58,28 +56,54 @@ const processQueue = async () => {
 
 
 
-socket.addEventListener('open', () => {
-  console.log('WebSocket connection established.');
-});
+let socket;
+let reconnectInterval = 1000; // Start with a 1-second interval
+const maxReconnectInterval = 30000; // Cap the interval at 30 seconds
 
-socket.addEventListener('message', (event) => {
-  try {
-    const data = JSON.parse(event.data);
-    queue.push(data);
+function createWebSocket() {
+  socket = new WebSocket('wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post'); // Replace with your WebSocket URL
+
+  socket.addEventListener('open', () => {
+    console.log('WebSocket connection established.');
+    reconnectInterval = 1000; // Reset reconnect interval on successful connection
+  });
+
+  socket.addEventListener('message', (event) => {
     try {
-      processQueue();
-    } catch(e) {
-      console.log(e)
+      const data = JSON.parse(event.data);
+      queue.push(data);
+      try {
+        processQueue();
+      } catch (e) {
+        console.log(e);
+      }
+    } catch (error) {
+      console.warn('Could not parse message as JSON:', error);
     }
-  } catch (error) {
-    console.warn('Could not parse message as JSON:', error);
+  });
+
+  socket.addEventListener('close', (event) => {
+    console.log('WebSocket connection closed:', event.code, event.reason);
+    attemptReconnect(); // Attempt to reconnect on close
+  });
+
+  socket.addEventListener('error', (error) => {
+    console.error('WebSocket error:', error);
+    // Optionally close the socket to trigger reconnection logic
+    if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+      socket.close();
+    }
+  });
+}
+
+function attemptReconnect() {
+  if (reconnectInterval <= maxReconnectInterval) {
+    console.log(`Attempting to reconnect in ${reconnectInterval / 1000} seconds...`);
+    setTimeout(() => {
+      createWebSocket();
+      reconnectInterval *= 2; // Exponential backoff
+    }, reconnectInterval);
+  } else {
+    console.error('Maximum reconnection interval reached. Giving up.');
   }
-});
-
-socket.addEventListener('close', (event) => {
-  console.log('WebSocket connection closed:', event.code, event.reason);
-});
-
-socket.addEventListener('error', (error) => {
-  console.error('WebSocket error:', error);
-});
+}

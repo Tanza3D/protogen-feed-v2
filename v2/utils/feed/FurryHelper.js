@@ -80,7 +80,7 @@ export default class FurryHelper {
   }
 
   static isArt(text) {
-    const hashtags = ['#art', '#furryart', '#protogenart', '#myart', '#ocart'];
+    const hashtags = ['#art', '#furryart', '#protogenart', '#myart', '#ocart', '#sketch', '#procreateart'];
     return hashtags.some(tag => text.toLowerCase().includes(tag));
   }
 }
