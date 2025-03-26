@@ -1,4 +1,5 @@
-// Object to store the last time each user pushed an analytic
+import db from "./database.js";
+
 const userLastPushTime = {};
 
 export async function PushAnalytic(user, feed) {
@@ -10,6 +11,7 @@ export async function PushAnalytic(user, feed) {
     }
 
     userLastPushTime[user] = currentTime;
+
 
     await db.execute(`
         INSERT INTO \`analytics\` (\`feed\`, \`user\`, \`time\`)
