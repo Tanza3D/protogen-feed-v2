@@ -10,6 +10,9 @@
   "description": "",
   "type": "module",
   "dependencies": {
-    "@atproto/api": "^0.13.19"
+    "@atproto/api": "^0.13.19",
+    "@atproto/identity": "^0.4.6",
+    "@atproto/xrpc-server": "^0.7.13",
+    "jsonwebtoken": "^9.0.2"
   }
 }
