@@ -44,8 +44,47 @@ export async function AggregateDailyViews(date) {
         GROUP BY feed
     `, [day]);
 
+
     dataCache = null;
 }
+
+export async function AggregateDailyPostCount(date) {
+    console.log("Getting post counts for ", date);
+    const day = date.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const today = new Date().toISOString().split('T')[0];
+
+    if (day === today) {
+        console.log(`Skipping aggregation for current day: ${day}`);
+        return;
+    }
+
+    await db.execute(`
+        DELETE FROM daily_posts_added
+        WHERE day = ?
+    `, [day]);
+
+    await db.execute(`
+        INSERT INTO daily_posts_added (day, post_count, feed)
+        SELECT ?          AS day,
+               COUNT(*)   AS post_count,
+               'protogens' AS feed
+        FROM post
+        WHERE DATE(LEFT(indexedAt, 10)) = ?
+
+        UNION ALL
+
+        SELECT ?         AS day,
+               COUNT(*)  AS post_count,
+               'osusky' AS feed
+        FROM \`osu-post\`
+        WHERE DATE(LEFT(indexedAt, 10)) = ?
+    `, [day, day, day, day]);
+
+    dataCache = null;
+
+    console.log("Done");
+}
+
 
 
 export async function FillEmptyDays() {
@@ -79,10 +118,43 @@ export async function FillEmptyDays() {
         }
     }
 }
+export async function FillEmptyDaysForPostCount() {
+    const [rangeRows] = await db.execute(`
+        SELECT 
+            MIN(DATE(LEFT(indexedAt, 10))) AS earliest, 
+            MAX(DATE(LEFT(indexedAt, 10))) AS latest 
+        FROM post
+    `);
+
+    const { earliest, latest } = rangeRows[0];
+    if (!earliest || !latest) return; // no posts yet
+
+    const startDate = new Date(earliest);
+    const endDate = new Date(latest);
+
+    const [existingRows] = await db.execute(`
+        SELECT DISTINCT day FROM daily_posts_added;
+    `);
+
+    const existingDays = new Set(existingRows.map(row => row.day.toISOString().split('T')[0]));
+
+    for (
+      let d = new Date(startDate);
+      d <= endDate;
+      d = new Date(d.setDate(d.getDate() + 1)) // create a new date object for each iteration
+    ) {
+        const dayStr = d.toISOString().split('T')[0];
+        if (!existingDays.has(dayStr)) {
+            await AggregateDailyPostCount(new Date(dayStr));
+        }
+    }
+}
+
+
 
 export function InitAnalytics() {
     FillEmptyDays();
-
+    FillEmptyDaysForPostCount();
     const now = new Date();
     const msUntilMidnightUTC = new Date(Date.UTC(
       now.getUTCFullYear(),
@@ -93,11 +165,17 @@ export function InitAnalytics() {
 
     setTimeout(() => {
         FillEmptyDays();
+        FillEmptyDaysForPostCount();
+
         AggregateDailyViews(getYesterday());
+        AggregateDailyPostCount(getYesterday());
 
         setInterval(() => {
             FillEmptyDays();
+            FillEmptyDaysForPostCount();
+
             AggregateDailyViews(getYesterday());
+            AggregateDailyPostCount(getYesterday());
             // we run this every 24 hours from this point on !!
         }, 24 * 60 * 60 * 1000);
 
@@ -116,7 +194,15 @@ export async function GetData() {
         SELECT feed, day, views
         FROM daily_feed_views;
     `);
-    dataCache = rows;
+
+    const [rows2] = await db.execute(`
+        SELECT *
+        FROM daily_posts_added;
+    `);
+    dataCache = {
+        "views": rows,
+        "posts": rows2
+    };
 
     return dataCache;
 
