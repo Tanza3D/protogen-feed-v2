@@ -12,8 +12,7 @@ export default class OsuHelper {
     }
     return (name.toLowerCase().includes('osugame')
       || name.toLowerCase().includes('osu!')
-      || name.toLowerCase().includes('osu!game')
-      || name.toLowerCase().includes('osu game'))
+      || name.toLowerCase().includes('osu!game'))
   }
 
   static isOsuStrict(name = '') {

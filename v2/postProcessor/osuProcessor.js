@@ -95,9 +95,12 @@ export default async function OsuProcessor(data, logger) {
 
       if (blocked) add = false
 
-      const forbiddenWords = [" ohio", " michigan", " football", " v osu", " vs osu", " osumich", "buckeyes", "#beatosu", "#jbos"];
+      const forbiddenWords = [" ohio", " michigan", " football", " v osu", " vs osu", " osumich", "buckeyes", "#beatosu", "#jbos", ' mlb ',  'iowa st', 'beaver baseball', 'held ball'];
       if (forbiddenWords.some(word => create.record.text.toLowerCase().includes(word))) {
         add = false;
+      }
+      if(create.record.text.includes("OSU game")) {
+        add = false; // we're probably talking about football!!
       }
 
       if (add) logger('adding ; ' + create.record.text)

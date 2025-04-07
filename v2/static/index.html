@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tanza Feeds</title>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@latest"></script>
+  <script>
+    const analyticsData = '{{ANALYTICSDATA}}'
+  </script>
+  <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+<div class="container">
+  <div class="panel">
+    <h1>Tanza Feeds</h1>
+    <p>Hi, welcome to the site for my Bluesky feeds! This just shows basic analytics for now, but in the future will
+      allow for opting out of showing up, and have other info :)</p>
+    <a class="feed" href="https://bsky.app/profile/tanza.me/feed/osusky">
+      <img
+        src="https://cdn.bsky.app/img/avatar_thumbnail/plain/did:plc:7jhguqneakum7yhv4wt3kwfi/bafkreib4eaefcj6prt5anzwcfyc5j7iw3w6fx7dnywrodws43b3elcndlu@jpeg">
+      <div>
+        <h3>osu!sky</h3>
+        <p>Feed for osu! users</p>
+      </div>
+    </a>
+    <a class="feed" href="https://bsky.app/profile/tanza.me/feed/protogens">
+      <img
+        src="https://cdn.bsky.app/img/avatar_thumbnail/plain/did:plc:7jhguqneakum7yhv4wt3kwfi/bafkreietquluwjewqyyhy2dnitnptwcnf3opyyf56thg77ehqsvhulhydi@jpeg">
+      <div>
+        <h3>The Protogens</h3>
+        <p>A feed of just protogens!</p>
+      </div>
+    </a>
+    <a class="feed" href="https://bsky.app/profile/tanza.me/feed/protogens-art">
+      <img
+        src="https://cdn.bsky.app/img/avatar_thumbnail/plain/did:plc:7jhguqneakum7yhv4wt3kwfi/bafkreigtc6xlu452fye5khr6fergm6orw2xo7df4vua4ie72beo3tbzgzi@jpeg">
+      <div>
+        <h3>The Protogens 🎨 Art</h3>
+        <p>A feed of just protogen art!</p>
+      </div>
+    </a>
+  </div>
+  <div class="panel">
+    <h1>Daily Views</h1>
+    <div id="chart">
+
+    </div>
+  </div>
+  <center>
+    <small>Created by <a href="https://tanza.me">Tanza</a></small>
+    <div>
+      <a href="https://github.com/tanza3d/protogen-feed-v2">
+        <img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/github.svg" />
+      </a>
+      <a href="https://bsky.app/profile/tanza.me">
+        <img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/bluesky.svg" />
+      </a>
+    </div>
+  </center>
+</div>
+
+<script src="/static/index.js"></script>
+</body>
+</html>
