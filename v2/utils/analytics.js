@@ -34,7 +34,7 @@ export async function AggregateDailyViews(date) {
     `, [day]);
 
     await db.execute(`
-        INSERT INTO daily_feed_views (feed, day, views)
+        REPLACE INTO daily_feed_views (feed, day, views)
         SELECT 
             feed, 
             DATE(time) as day, 
@@ -64,7 +64,7 @@ export async function AggregateDailyPostCount(date) {
     `, [day]);
 
     await db.execute(`
-        INSERT INTO daily_posts_added (day, post_count, feed)
+        REPLACE INTO daily_posts_added (day, post_count, feed)
         SELECT ?          AS day,
                COUNT(*)   AS post_count,
                'protogens' AS feed
