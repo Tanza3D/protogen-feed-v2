@@ -19,7 +19,7 @@ const feeds = {
   }),
   'osufeed-test': () => ({
     table: 'post',
-    where: [],
+    where: ["uri LIKE 'at://did:plc:jdxon57r7idl5vdpk7p7wjaa/%'"],
     params: [],
   }),
 }

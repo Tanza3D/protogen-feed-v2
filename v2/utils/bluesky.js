@@ -18,8 +18,7 @@ export default function CreateBlueskyRoutes(app) {
       // (nor waste time getting user data!)
     }
 
-
-    res.send(await GetFeed(lastWord, cursor))
+    res.send(await GetFeed(lastWord, cursor, req.query.limit))
   })
   app.get('/.well-known/did.json', (_req, res) => {
     console.log("/.well-known/did.json")
