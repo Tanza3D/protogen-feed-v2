@@ -47,6 +47,35 @@ export class Feed extends Category {
                 }
 
             }
+        }),
+        new Command({
+            permission: "user.invite",
+            name: "remove",
+            callback: async (data: CommandData) => {
+                await data.embedder.Update("Checking");
+
+                var post = data.args[1]; // The post URL
+                var feed = null; // no specified feed = both
+                if (data.args.length > 2) feed = data.args[2];
+
+                var did = await this.fetchDidFromPost(post) + "/app.bsky.feed.post/" + post.split("/").at(-1);
+
+                await data.embedder.Update(did + "?");
+
+
+                if (feed == null || feed == "osu") {
+                    const deletedResult = await Database.Connection.db.execute("DELETE FROM `osu-post` WHERE uri LIKE ?", ["%" + did]);
+                    const deletedCount = deletedResult[0]?.affectedRows || 0;
+                    data.embedder.Update("[osu] Deleted posts: " + deletedCount);
+                }
+
+                if (feed == null || feed == "protogen") {
+                    const deletedResult = await Database.Connection.db.execute("DELETE FROM `post` WHERE uri LIKE ?", ["%" + did]);
+                    const deletedCount = deletedResult[0]?.affectedRows || 0;
+                    data.embedder.Update("[protogen] Deleted posts: " + deletedCount);
+                }
+
+            }
         })
     ];
 
@@ -74,4 +103,5 @@ export class Feed extends Category {
             return "";
         }
     }
+
 }
