@@ -55,6 +55,10 @@ export class Feed extends Category {
                 await data.embedder.Update("Checking");
 
                 var post = data.args[1]; // The post URL
+                if (post.startsWith('<') && post.endsWith('>')) {
+                    post = post.slice(1, -1);
+                }
+
                 var feed = null; // no specified feed = both
                 if (data.args.length > 2) feed = data.args[2];
 
